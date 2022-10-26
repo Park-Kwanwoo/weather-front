@@ -56,7 +56,7 @@ axios.get("/api/posts/totalPage")
 })
 
 
-axios.get(`/api/posts`)
+axios.get("/api/posts")
     .then(res => {
       res.data.forEach((r: any) => {
         posts.value.push(r);
