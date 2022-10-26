@@ -57,9 +57,9 @@ axios.get("/api/posts/totalPage")
 
 
 axios.get("/api/posts")
-    .then(res => {
-      res.data.forEach((r: any) => {
-        posts.value.push(r);
+    .then(r => {
+      r.data.forEach((res: any) => {
+        posts.value.push(res);
       })
     })
     .catch(e => {
@@ -81,19 +81,5 @@ const total = function () {
   return totalPage.value > 10 ? totalPage.value : 10;
 };
 
-const pagination = (e: number) => {
 
-  axios.get(`/api/posts?page=${e}&size=10`)
-      .then(res => {
-        posts.value.length = 0
-        res.data.forEach((r: any) => {
-          posts.value.push(r);
-        })
-      })
-      .catch(e => {
-        ElMessage(e.response.data)
-        auth.clear();
-        router.push({name: 'login'})
-      })
-}
 </script>
