@@ -20,25 +20,27 @@
 <script setup lang="ts">
 import axios from "axios";
 import {ref} from "vue";
-import moment from "moment";
+import dayjs from "dayjs/esm/index.js";
 
 const mapKey = import.meta.env.VITE_MAP_KEY;
 const script = document.createElement("script");
 script.src = 'http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=' + mapKey;
 document.body.appendChild(script)
 
-let date = moment();
+let date = dayjs();
 let now = date.format("YYYYMMDD HHMM");
+console.log(now);
 let day = now.substring(0, 8);
 let time = now.substring(9);
 const weatherData = ref([]);
 
 
 if (Number.parseInt(time) < 30) {
-  moment().subtract(30, "minutes").format("YYYYMMDD HHMM");
+  dayjs().subtract(30, "minutes").format("YYYYMMDD HHMM");
   day = now.substring(0, 7);
   time = now.substring(9);
 }
+
 
 console.log(day);
 console.log(time);
