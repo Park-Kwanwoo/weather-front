@@ -29,11 +29,10 @@ document.body.appendChild(script)
 
 let date = dayjs();
 let now = date.format("YYYYMMDD HHMM");
-console.log(now);
+
 let day = now.substring(0, 8);
 let time = now.substring(9);
 const weatherData = ref([]);
-
 
 if (Number.parseInt(time) < 30) {
   dayjs().subtract(30, "minutes").format("YYYYMMDD HHMM");
@@ -41,9 +40,6 @@ if (Number.parseInt(time) < 30) {
   time = now.substring(9);
 }
 
-
-console.log(day);
-console.log(time);
 
 /*
 스크립트가 로드 되기전에 kakao객체에 접근하여 kakao객체를 찾지 못해 발생하는 에러를
@@ -111,7 +107,12 @@ script.onload = () => {
       // 경도 (x)
       let longitude = parseFloat(latlng.getLng());
 
-      axios.get(`/api/weather/forecast?baseDate=${day}&baseTime=${time}&longitude=${longitude}&latitude=${latitude}`)
+      axios.post("/api/weather/forecast", {
+        latitude: latitude,
+        longitude: longitude,
+        baseDate: day,
+        baseTime: time
+      })
           .then(r => {
             if (weatherData.value.length != 0) {
               weatherData.value.length = 0;
