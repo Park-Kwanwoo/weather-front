@@ -27,16 +27,20 @@ const script = document.createElement("script");
 script.src = 'http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=' + mapKey;
 document.body.appendChild(script)
 
-let now = dayjs().format("YYYYMMDD HHMM");
-let date = now.substring(0, 8);
-let time = now.substring(9);
-const weatherData = ref([]);
+let now = dayjs().format("YYYY-MM-DD HH:mm:ss");
+let baseDate = "";
+let baseTime = now.substring(14, 16);
 
+const weatherData = ref([])
 
-if (Number.parseInt(time) < 30) {
-  dayjs().subtract(30, "minutes").format("YYYYMMDD HHMM");
-  date = now.substring(0, 7);
-  time = now.substring(9);
+if (Number.parseInt(baseTime) < 30) {
+  now = dayjs(now).subtract(30, "minute").format("YYYYMMDD HHmm");
+  baseDate = now.substring(0,8);
+  baseTime = now.substring(9);
+} else {
+  now = dayjs().format("YYYYMMDD HHmm");
+  baseDate = now.substring(0,8);
+  baseTime = now.substring(9);
 }
 
 /*
@@ -108,8 +112,8 @@ script.onload = () => {
       axios.post("/api/weather/forecast", {
         longitude: longitude,
         latitude: latitude,
-        baseDate: date,
-        baseTime: time
+        baseDate: baseDate,
+        baseTime: baseTime
       })
           .then(r => {
             if (weatherData.value.length != 0) {
