@@ -105,7 +105,12 @@ script.onload = () => {
       // 경도 (x)
       let longitude = parseFloat(latlng.getLng());
 
-      axios.get(`/api/weather/forecast?baseDate=${date}&baseTime=${time}&longitude=${longitude}&latitude=${latitude}`)
+      axios.post("/api/weather/forecast", {
+        longitude: longitude,
+        latitude: latitude,
+        baseDate: date,
+        baseTime: time
+      })
           .then(r => {
             if (weatherData.value.length != 0) {
               weatherData.value.length = 0;
