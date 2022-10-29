@@ -20,29 +20,28 @@
 <script setup lang="ts">
 import axios from "axios";
 import {ref} from "vue";
+import moment from "moment";
 
 const mapKey = import.meta.env.VITE_MAP_KEY;
-
-let date = new Date();
-let currentDate = date.toJSON().slice(0, 10).replace(/-/g, '');
-let currentHour = date.getHours();
-let currentMinutes = date.getMinutes();
-const weatherData = ref([])
-
-if (currentMinutes < 30) {
-  if (currentHour === 0) {
-    currentHour = 23;
-  } else {
-    currentHour -= 1;
-  }
-
-  currentMinutes = 50;
-}
-let currentTime = currentHour + "" + currentMinutes;
-
 const script = document.createElement("script");
 script.src = 'http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=' + mapKey;
 document.body.appendChild(script)
+
+let date = moment();
+let now = date.format("YYYYMMDD HHMM");
+let day = now.substring(0, 8);
+let time = now.substring(9);
+const weatherData = ref([]);
+
+
+if (Number.parseInt(time) < 30) {
+  moment().subtract(30, "minutes").format("YYYYMMDD HHMM");
+  day = now.substring(0, 7);
+  time = now.substring(9);
+}
+
+console.log(day);
+console.log(time);
 
 /*
 스크립트가 로드 되기전에 kakao객체에 접근하여 kakao객체를 찾지 못해 발생하는 에러를
@@ -110,7 +109,7 @@ script.onload = () => {
       // 경도 (x)
       let longitude = parseFloat(latlng.getLng());
 
-      axios.get(`/api/weather/forecast?baseDate=${currentDate}&baseTime=${currentTime}&longitude=${longitude}&latitude=${latitude}`)
+      axios.get(`/api/weather/forecast?baseDate=${day}&baseTime=${time}&longitude=${longitude}&latitude=${latitude}`)
           .then(r => {
             if (weatherData.value.length != 0) {
               weatherData.value.length = 0;
