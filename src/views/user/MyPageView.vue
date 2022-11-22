@@ -10,12 +10,9 @@
       </el-form-item>
 
       <el-form-item label="닉네임">
-        <el-input v-model="userInfo.nickname" />
+        <el-input v-model="userInfo.nickname"/>
       </el-form-item>
 
-      <el-form-item label="전화번호">
-        <el-input v-model="userInfo.phone" readonly />
-      </el-form-item>
       <el-form-item label="">
         <el-button type="primary" @click="edit()">수정</el-button>
       </el-form-item>
@@ -33,7 +30,7 @@ import {ElMessage} from "element-plus";
 
 const auth = useAuthStore();
 const router = useRouter();
-const { getAccessToken } = storeToRefs(auth)
+const {getAccessToken} = storeToRefs(auth)
 
 const props = defineProps({
   memberId: {
@@ -51,20 +48,19 @@ const configs = {
 const userInfo = ref({
   id: 0,
   email: "",
-  nickname: "",
-  phone: ""
+  nickname: ""
 })
 
 onMounted(() => {
-axios.get(`/api/members/${props.memberId}`, configs)
-    .then(r => {
-      userInfo.value = r.data
-    })
-    .catch(e => {
-      ElMessage(e.response.data)
-      auth.clear();
-      router.replace({name: 'home'})
-    })
+  axios.get(`/api/members/${props.memberId}`, configs)
+      .then(r => {
+        userInfo.value = r.data
+      })
+      .catch(e => {
+        ElMessage(e.response.data)
+        auth.clear();
+        router.replace({name: 'home'})
+      })
 })
 const edit = function () {
   router.push({name: 'myPageEdit', params: {memberId: props.memberId}})
