@@ -13,9 +13,6 @@
         <el-input v-model="userInfo.nickname" />
       </el-form-item>
 
-      <el-form-item label="전화번호">
-        <el-input v-model="userInfo.phone" readonly />
-      </el-form-item>
       <el-form-item label="">
         <el-button type="primary" @click="edit">수정</el-button>
         <el-button type="warning" @click="remove">삭제</el-button>
@@ -44,8 +41,7 @@ const props = defineProps({
 
 const userInfo = ref({
   email: "",
-  nickname: "",
-  phone: ""
+  nickname: ""
 })
 
 const configs = {
@@ -55,11 +51,11 @@ const configs = {
 }
 
 axios.get(`/api/members/${props.memberId}`, configs)
-    .then(r => {
-      userInfo.value = r.data
+    .then(res=> {
+      userInfo.value = res.data
     })
-    .catch(e => {
-      alert(e.response.data)
+    .catch(err => {
+      alert(err.response.data)
       router.push({name: 'home'})
     })
 
@@ -67,23 +63,26 @@ const edit = function () {
   axios.patch(`/api/members/${props.memberId}`, {
     nickname: userInfo.value.nickname
   }, configs)
-      .then(r => {
-        router.push({name: 'myPage', params: {memberId: props.memberId}})
+      .then(res => {
+        if (res.status == 200) {
+          router.replace({name: 'myPage', params: {memberId: props.memberId}})
+        }
+
       })
-      .catch(e => {
-        ElMessage(e.response.data.validation.nickname)
+      .catch(err => {
+        ElMessage(err.response.data.validation.nickname)
       })
 };
 
 
 const remove = () => {
   axios.delete(`/api/members/${props.memberId}`, configs)
-      .then(r => {
+      .then(res => {
         auth.clear();
         router.replace({name: 'home'})
       })
-      .catch(e => {
-        ElMessage(e.response.data)
+      .catch(err => {
+        ElMessage(err.response.data)
         auth.clear();
         router.push({name: 'home'})
       })
