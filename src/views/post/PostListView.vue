@@ -65,7 +65,7 @@ axios.get("/api/posts")
     .catch(e => {
       ElMessage(e.response.data)
       auth.clear();
-      router.push({name: 'login'})
+      router.push({name: 'home'});
     })
 
 const write = function () {
